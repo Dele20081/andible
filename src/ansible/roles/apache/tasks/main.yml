@@ -1,7 +1,0 @@
----
-- include: epel.yml
-- include: base.yml
-- include: php.yml
-- include: apache.yml
-- include: mail.yml
-- include: sysctl.yml

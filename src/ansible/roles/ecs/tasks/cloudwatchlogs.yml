@@ -1,0 +1,66 @@
+
+# ----------------------------------
+# Setup awslogs CLI conf file
+# ----------------------------------
+- name: Create Cloudwatch Logs CLI conf file
+  template:
+    src: cloudwatchlogsconf.j2
+    dest: /etc/awslogs/awscli.conf
+    owner: root
+    group: root
+    mode: 0755
+  notify:
+   - RestartCloudwatchLogs
+
+# ----------------------------------
+# Setup logging conf file
+# ----------------------------------
+- name: Create Cloudwatch Logging conf file
+  template:
+    src: cloudwatchlogs.j2 
+    dest: /etc/awslogs/awslogs.conf
+    owner: root
+    group: root
+    mode: 0755
+  notify:
+   - RestartCloudwatchLogs
+
+# ----------------------------------
+# Download Python setup file
+# ----------------------------------
+- name: Download Setup file from AWS
+  get_url:
+    url: https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
+    dest: /root/awslogs-agent-setup.py
+
+# ----------------------------------
+# Setup service
+# ----------------------------------
+- name: Check if awslogs service exist
+  stat:
+    path: /usr/lib/systemd/system/awslogsd.service
+  register: stat_result
+
+- name: Install Cloudwatch logs if service file does not exist
+  shell: yum install -y awslogs
+  when: stat_result.stat.exists == False 
+
+- name: Ensure awslogsd service is up.
+  service:
+    name: awslogsd
+    state: started
+    enabled: yes
+  ignore_errors: yes
+
+# ----------------------------------
+# Ensure dir for state file
+# ---------------------------------
+- name: Directory for Cloudwatch state
+  file:
+    path: /var/awslogs/state/
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+  notify:
+   - RestartCloudwatchLogs

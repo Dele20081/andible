@@ -1,0 +1,11 @@
+---
+- name: RestartECS
+  service:
+    name: "ecs"
+    state: "restarted"
+
+
+- name: RestartCloudwatchLogs
+  service:
+    name: awslogsd
+    state: restarted

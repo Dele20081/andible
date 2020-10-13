@@ -1,0 +1,62 @@
+[general]
+# Path to the CloudWatch Logs agent's state file. The agent uses this file to maintain
+# client side state across its executions.
+# General Section must be included
+state_file = /var/awslogs/state/agent-state
+region = eu-west-1
+
+[/var/log/messages]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/messages
+log_stream_name = {hostname}/var/log/messages
+log_group_name = rxa-poc-os-logs
+[/var/log/secure]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/secure
+log_stream_name = {hostname}/var/log/secure
+log_group_name = rxa-poc-os-logs
+[/var/log/cron]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cron
+log_stream_name = {hostname}/var/log/cron
+log_group_name = rxa-poc-os-logs
+[/var/log/cloud-init.log]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/cloud-init.log
+log_stream_name = {hostname}/var/log/cloud-init.log
+log_group_name = rxa-poc-os-logs
+[/var/log/cfn-init.log]
+datetime_format = %Y-%m-%d %H:%M:%S
+file = /var/log/cfn-init.log
+log_stream_name = {hostname}/var/log/cfn-init.log
+log_group_name = rxa-poc-os-logs
+[/var/log/cfn-hup.log]
+datetime_format = %Y-%m-%d %H:%M:%S
+file = /var/log/cfn-hup.log
+log_stream_name = {hostname}/var/log/cfn-hup.log
+log_group_name = rxa-poc-os-logs
+[/var/log/cfn-init-cmd.log]
+datetime_format = %Y-%m-%d %H:%M:%S
+file = /var/log/cfn-init-cmd.log
+log_stream_name = {hostname}/var/log/cfn-init-cmd.log
+log_group_name = rxa-poc-os-logs
+[/var/log/cloud-init-output.log]
+file = /var/log/cloud-init-output.log
+log_stream_name = {hostname}/var/log/cloud-init-output.log
+log_group_name = rxa-poc-os-logs
+[/var/log/dmesg]
+file = /var/log/dmesg
+log_stream_name = {hostname}/var/log/dmesg
+log_group_name = rxa-poc-os-logs
+[/var/log/aws/codedeploy-agent/codedeploy-agent.log]
+file = /var/log/aws/codedeploy-agent/codedeploy-agent.log
+log_stream_name = {hostname}/var/log/aws/codedeploy-agent/codedeploy-agent.log
+log_group_name = rxa-poc-os-logs
+[codedeploy-updater-logs]
+file = /tmp/codedeploy-agent.update.log
+log_stream_name = {hostname}-codedeploy-updater-log
+log_group_name = codedeploy-updater-log
+[codedeploy-deployment-logs]
+file = /opt/codedeploy-agent/deployment-root/deployment-logs/codedeploy-agent-deployments.log
+log_stream_name = {hostname}-codedeploy-deployments-log
+log_group_name = codedeploy-deployments-log

@@ -1,0 +1,19 @@
+#Task to install php packages
+---
+- name: Amazon linux extra install ecs-agemt
+  shell: amazon-linux-extras install ecs
+
+# ----------------------------------
+# Setup ECS conf file
+# ----------------------------------
+- name: Create ECS conf file
+  template:
+    src: ecsconfig.j2 
+    dest: /etc/ecs/ecs.config
+    owner: root
+    group: root
+    mode: 0755
+  notify:
+   - RestartECS
+
+
