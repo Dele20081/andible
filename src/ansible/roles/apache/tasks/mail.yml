@@ -1,0 +1,52 @@
+---
+#- name: Stop postfix
+#  service: 
+#    name: sendmail 
+#    enabled: no
+#    state: stopped
+
+- name: Install postfix
+  yum:
+    name: postfix
+    state: present
+
+- name: Configure Postfix main.cf
+  lineinfile:
+    backup: yes
+    dest: /etc/postfix/main.cf
+    regexp: "^{{ item.variable }}\ ="
+    line: "{{ item.variable }} = {{ item.value }}"
+    state: present
+  with_items:
+    - { variable: 'relayhost', value: "[email-smtp.eu-west-1.amazonaws.com]:587" }
+    - { variable: 'smtp_sasl_auth_enable', value: 'yes' }
+    - { variable: 'smtp_sasl_security_options', value: 'noanonymous' }
+    - { variable: 'smtp_sasl_password_maps', value: 'hash:/etc/postfix/sasl_passwd' }
+    - { variable: 'smtp_use_tls', value: 'yes' }
+    - { variable: 'smtp_tls_security_level', value: 'encrypt' }
+    - { variable: 'smtp_tls_note_starttls_offer', value: 'yes' }
+    - { variable: 'smtp_tls_CAfile', value: '/etc/ssl/certs/ca-bundle.crt' }
+    - { variable: 'sender_canonical_maps', value: 'regexp:/etc/postfix/sender_canonical' }
+
+- name: Create file with SMTP credentials
+  lineinfile:
+    backup: yes
+    create: yes
+    dest: /etc/postfix/sasl_passwd
+    regexp: "email-smtp.eu-west-1.amazonaws.com"
+    line: "[email-smtp.eu-west-1.amazonaws.com]:587 EMAIL_USERNAME_CHANGEME:EMAIL_PASSWORD_CHANGEME"
+    state: present
+
+- name: Set canonical mappings for sender addresses
+  lineinfile:
+    backup: yes
+    create: yes
+    dest: /etc/postfix/sender_canonical
+    regexp: "charitylearning.org"
+    line: "/.+ charitylearning.org"
+    state: present
+
+- name: Ensure Postfix is enabled and started
+  service: 
+    name: postfix 
+    enabled: yes

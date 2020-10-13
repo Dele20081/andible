@@ -1,0 +1,28 @@
+#Task to install php packages
+---
+- name: Amazon linux extra instlal php7.2
+  shell: amazon-linux-extras install php7.2
+
+- name: Install Required PHP Packages
+  yum:
+    name: "{{ php72_packages }}"
+    state: present
+
+
+- name: Set PHP memory limit to 512MB
+  lineinfile:
+    path: /etc/php.ini
+    regexp: '^memory_limit ='
+    line: memory_limit = 512M
+
+- name: Set PHP upload limit to 2048MB
+  lineinfile:
+    path: /etc/php.ini
+    regexp: '^upload_max_filesize ='
+    line: upload_max_filesize = 2048M
+
+- name: Set PHP post limit to 2048MB
+  lineinfile:
+    path: /etc/php.ini
+    regexp: '^post_max_size ='
+    line: post_max_size = 2048M
